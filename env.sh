@@ -21,12 +21,12 @@ export JWT_PATH=$BEACOND_CONFIG/jwt.hex
 export LOG_DIR=$(pwd)/logs
 
 # maybe you're running reth
-export RETH_BIN=`/usr/bin/which reth1.1 || echo reth`
+export RETH_BIN=`/usr/bin/which reth || echo $(pwd)/reth`
 export RETH_DATA=$(pwd)/var/reth
 export RETH_GENESIS_PATH=$RETH_DATA/genesis.json
 
 # OR maybe you're running geth
-export GETH_BIN=`/usr/bin/which geth || echo geth`
+export GETH_BIN=`/usr/bin/which geth || echo $(pwd)/geth`
 export GETH_DATA=$(pwd)/var/geth
 export GETH_GENESIS_PATH=$GETH_DATA/genesis.json
 
