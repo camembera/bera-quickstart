@@ -18,7 +18,7 @@ fi
 export SEED_DATA_URL=https://raw.githubusercontent.com/berachain/beacon-kit/refs/heads/main/testing/networks/$CHAIN_ID
 
 # THESE DEPEND ON YOUR LOCAL SETUP
-export BEACOND_BIN=`/usr/bin/which beacond || echo beacond`
+export BEACOND_BIN=`/usr/bin/which beacond || echo $(pwd)/beacond`
 export BEACOND_DATA=$(pwd)/var/beacond
 export BEACOND_CONFIG=$BEACOND_DATA/config  # don't change this. sorry.
 
