@@ -21,28 +21,34 @@ echo "BEACOND_DATA: $BEACOND_DATA"
 echo "BEACOND_BIN: $BEACOND_BIN"
 echo "  Version: $($BEACOND_BIN version)"
 
-$BEACOND_BIN init $MONIKER_NAME --chain-id $CHAIN --home $BEACOND_DATA 2>/dev/null
+$BEACOND_BIN >/dev/null 2>&1 init $MONIKER_NAME --chain-id $CHAIN --home $BEACOND_DATA 
+CHECK_FILE=$BEACOND_CONFIG/priv_validator_key.json
+if [ ! -f "$CHECK_FILE" ]; then
+    echo "Error: Private validator key was not created at $CHECK_FILE"
+    exit 1
+fi
+echo "✓ Private validator key generated in $CHECK_FILE"
+
+$BEACOND_BIN >/dev/null 2>&1 jwt generate -o $JWT_PATH
+if [ ! -f "$JWT_PATH" ]; then
+    echo "Error: JWT file was not created at $JWT_PATH"
+    exit 1
+fi
+echo "✓ JWT secret generated at $JWT_PATH"
 
 cp seed-data/genesis.json $BEACOND_CONFIG/genesis.json
 cp seed-data/kzg-trusted-setup.json $BEACOND_CONFIG/kzg-trusted-setup.json
+
 cp seed-data/app.toml $BEACOND_CONFIG/app.toml
-cp seed-data/config.toml $BEACOND_CONFIG/config.toml
-
-# choose sed options based on OS
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    SED_OPT="-i ''"
-else
-    SED_OPT='-i'
-fi
-
 sed $SED_OPT 's|^moniker = ".*"|moniker = "'$MONIKER_NAME'"|' $BEACOND_CONFIG/config.toml
+
+cp seed-data/config.toml $BEACOND_CONFIG/config.toml
 sed $SED_OPT 's|^rpc-dial-url = ".*"|rpc-dial-url = "'$RPC_DIAL_URL'"|' $BEACOND_CONFIG/app.toml
 sed $SED_OPT 's|^jwt-secret-path = ".*"|jwt-secret-path = "'$JWT_PATH'"|' $BEACOND_CONFIG/app.toml
 sed $SED_OPT 's|^trusted-setup-path = ".*"|trusted-setup-path = "'$BEACOND_CONFIG/kzg-trusted-setup.json'"|' $BEACOND_CONFIG/app.toml
 sed $SED_OPT 's|^suggested-fee-recipient = ".*"|suggested-fee-recipient = "'$WALLET_ADDRESS_FEE_RECIPIENT'"|' $BEACOND_CONFIG/app.toml
+echo "✓ Config files in $BEACOND_CONFIG updated"
 
-$BEACOND_BIN jwt generate -o $JWT_PATH
-
-echo
-echo 
-echo "✓ Beacon-Kit set up."
+echo -n "Genesis validator root: "
+beacond genesis validator-root $BEACOND_CONFIG/genesis.json 
+echo "✓ Beacon-Kit set up. Confirm genesis root is correct."

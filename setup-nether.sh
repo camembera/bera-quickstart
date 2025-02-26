@@ -8,8 +8,16 @@ if [ ! -x "$NETHERMIND_BIN" ]; then
     exit 1
 fi
 
+PEERS_LINE=""
 if [ -f "seed-data/el-peers.txt" ]; then
-    export EL_PEERS=$(grep '^enode://' "seed-data/el-peers.txt" | paste -sd ',' -)
+    EL_PEERS=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
+    PEERS_LINE="\"TrustedPeers\":  \"$EL_PEERS\""
+fi
+
+BOOTNODES_LINE=""
+if [ -f "seed-data/el-bootnodes.txt" ]; then
+    EL_BOOTNODES=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
+    BOOTNODES_LINE="\"Bootnodes\":  \"$EL_BOOTNODES\","
 fi
 
 mkdir -p $NETHERMIND_DATA_DIR
@@ -23,7 +31,7 @@ echo "  Version: $($NETHERMIND_BIN --version | grep Version)"
 cp seed-data/eth-nether-genesis.json $NETHERMIND_GENESIS_PATH
 
 ARCHIVE_OPTION='  "Pruning": { "Mode": "Full" }, '
-if [ "$CL_ARCHIVE_NODE" = true ]; then
+if [ "$EL_ARCHIVE_NODE" = true ]; then
     ARCHIVE_OPTION='  "Pruning": { "Mode": "None" }, '
 fi
 
@@ -50,8 +58,8 @@ cat <<EOF > $NETHERMIND_CONFIG_DIR/nethermind.cfg
     "SnapSync": true
   },
   "Network": {
-    "Bootnodes":  "$EL_PEERS",
-    "StaticPeers": "$EL_PEERS"
+    $BOOTNODES_LINE
+    $PEERS_LINE
   },
   "EthStats": {
     "Enabled": false
