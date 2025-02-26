@@ -6,7 +6,7 @@ export WALLET_ADDRESS_FEE_RECIPIENT=0x9BcaA41DC32627776b1A4D714Eef627E640b3EF5
 
 # CHAIN CONSTANTS
 export CHAIN_SPEC="mainnet"
-if [ "$CHAIN_SPEC" == "testnet" ]; then
+if [[ "$CHAIN_SPEC" == "testnet" ]]; then
     export CHAIN=testnet-beacon-80069
     export CHAIN_ID=80069
 else
