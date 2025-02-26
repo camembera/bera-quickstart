@@ -1,7 +1,5 @@
 #!/bin/bash 
 
-set -e
-
 # CHANGE THESE TWO VALUES
 export MONIKER_NAME=camembera
 export WALLET_ADDRESS_FEE_RECIPIENT=0x9BcaA41DC32627776b1A4D714Eef627E640b3EF5
@@ -46,7 +44,7 @@ if command -v Nethermind.Runner >/dev/null 2>&1; then
     export NETHERMIND_GENESIS_PATH="${NETHERMIND_CONFIG_DIR}/eth-nether-genesis.json"
 fi  
 
-if [ -z "$RETH_BIN" ] && [ -z "$GETH_BIN" ] && [ -z "$NETHERMIND_BIN" ]; then
+if [ ! "$RETH_BIN" ] && [ ! "$GETH_BIN" ] && [ ! "$NETHERMIND_BIN" ]; then
     echo "Error: No execution client found in PATH"
     echo "Please install either reth, geth, or Nethermind and ensure it is available in your PATH"
     exit 1
