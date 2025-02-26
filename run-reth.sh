@@ -13,7 +13,7 @@ if [ "$CL_ARCHIVE_NODE" = true ]; then
 fi
 
 $RETH_BIN node $ARCHIVE_OPTION \
---authrpc.addr 0.0.0.0 \
+--authrpc.addr 127.0.0.1 \
 --authrpc.port $EL_AUTHRPC_PORT \
 --authrpc.jwtsecret $JWT_PATH \
 --chain $RETH_GENESIS_PATH \
