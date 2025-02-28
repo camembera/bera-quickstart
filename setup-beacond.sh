@@ -44,7 +44,10 @@ sed $SED_OPT 's|^moniker = ".*"|moniker = "'$MONIKER_NAME'"|' $BEACOND_CONFIG/co
 
 cp seed-data/config.toml $BEACOND_CONFIG/config.toml
 sed $SED_OPT 's|^rpc-dial-url = ".*"|rpc-dial-url = "'$RPC_DIAL_URL'"|' $BEACOND_CONFIG/app.toml
-sed $SED_OPT 's|^laddr = ".*"|laddr = "tcp://127.0.0.1:'$EL_ETHRPC_PORT'"|' $BEACOND_CONFIG/config.toml
+sed $SED_OPT 's|^laddr = ".*26657"|laddr = "tcp://127.0.0.1:'$EL_ETHRPC_PORT'"|' $BEACOND_CONFIG/config.toml
+sed $SED_OPT 's|^laddr = ".*26656"|laddr = "tcp://127.0.0.1:'$EL_ETHP2P_PORT'"|' $BEACOND_CONFIG/config.toml
+sed $SED_OPT 's|^proxy_app = ".*26658"|proxy_app = "tcp://127.0.0.1:'$EL_ETHPROXY_PORT'"|' $BEACOND_CONFIG/config.toml
+
 sed $SED_OPT 's|^jwt-secret-path = ".*"|jwt-secret-path = "'$JWT_PATH'"|' $BEACOND_CONFIG/app.toml
 sed $SED_OPT 's|^trusted-setup-path = ".*"|trusted-setup-path = "'$BEACOND_CONFIG/kzg-trusted-setup.json'"|' $BEACOND_CONFIG/app.toml
 sed $SED_OPT 's|^suggested-fee-recipient = ".*"|suggested-fee-recipient = "'$WALLET_ADDRESS_FEE_RECIPIENT'"|' $BEACOND_CONFIG/app.toml

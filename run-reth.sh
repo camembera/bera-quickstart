@@ -45,6 +45,7 @@ $RETH_BIN node 					\
 	--http					\
 	--http.addr 0.0.0.0			\
 	--http.port $CL_ETHRPC_PORT		\
+        --ipcpath /tmp/reth.ipc.$EL_ETHRPC_PORT \
         --discovery.port $CL_ETHRPC_PORT	\
 	--http.corsdomain '*'			\
 	--log.file.directory $LOG_DIR		\
