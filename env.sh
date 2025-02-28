@@ -1,20 +1,11 @@
 #!/bin/bash 
 
 # CHANGE THESE VALUES
+export CHAIN_SPEC="mainnet"
 export MONIKER_NAME=camembera
 export WALLET_ADDRESS_FEE_RECIPIENT=0x9BcaA41DC32627776b1A4D714Eef627E640b3EF5
 export EL_ARCHIVE_NODE=false # set to true if you want to run an archive node on CL and EL
-
-# CHAIN CONSTANTS
-export CHAIN_SPEC="mainnet"
-if [[ "$CHAIN_SPEC" == "bepolia" ]]; then
-    export CHAIN=testnet-beacon-80069
-    export CHAIN_ID=80069
-else
-    export CHAIN=mainnet-beacon-80094
-    export CHAIN_ID=80094
-fi
-export SEED_DATA_URL=https://raw.githubusercontent.com/berachain/beacon-kit/refs/heads/main/testing/networks/$CHAIN_ID
+export MY_IPV4=`curl canhazip.com`
 
 # THESE DEPEND ON YOUR LOCAL SETUP
 export BEACOND_BIN=$(command -v beacond || echo $(pwd)/beacond)
@@ -22,9 +13,24 @@ export BEACOND_DATA=$(pwd)/var/beacond
 export BEACOND_CONFIG=$BEACOND_DATA/config  # don't change this. sorry.
 
 export EL_AUTHRPC_PORT=8551
+export EL_ETHRPC_PORT=8645
+
+export CL_ETHRPC_PORT=8545
+export CL_ETH_PORT=30303
+export PROMETHEUS_PORT=9989
 export RPC_DIAL_URL=http://localhost:$EL_AUTHRPC_PORT
 export JWT_PATH=$BEACOND_CONFIG/jwt.hex
 export LOG_DIR=$(pwd)/logs
+
+# CHAIN CONSTANTS
+if [[ "$CHAIN_SPEC" == "testnet" ]]; then
+    export CHAIN=testnet-beacon-80069
+    export CHAIN_ID=80069
+else
+    export CHAIN=mainnet-beacon-80094
+    export CHAIN_ID=80094
+fi
+export SEED_DATA_URL=https://raw.githubusercontent.com/berachain/beacon-kit/refs/heads/main/testing/networks/$CHAIN_ID
 
 # identify the execution client and choose paths; you can override the data directories
 if command -v reth >/dev/null 2>&1; then

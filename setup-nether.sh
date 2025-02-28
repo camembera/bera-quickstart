@@ -8,18 +8,6 @@ if [ ! -x "$NETHERMIND_BIN" ]; then
     exit 1
 fi
 
-PEERS_LINE=""
-if [ -f "seed-data/el-peers.txt" ]; then
-    EL_PEERS=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
-    PEERS_LINE="\"TrustedPeers\":  \"$EL_PEERS\""
-fi
-
-BOOTNODES_LINE=""
-if [ -f "seed-data/el-bootnodes.txt" ]; then
-    EL_BOOTNODES=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
-    BOOTNODES_LINE="\"Bootnodes\":  \"$EL_BOOTNODES\","
-fi
-
 mkdir -p $NETHERMIND_DATA_DIR
 mkdir -p $NETHERMIND_CONFIG_DIR
 
@@ -30,9 +18,26 @@ echo "  Version: $($NETHERMIND_BIN --version | grep Version)"
 
 cp seed-data/eth-nether-genesis.json $NETHERMIND_GENESIS_PATH
 
-ARCHIVE_OPTION='  "Pruning": { "Mode": "Full" }, '
+PEERS_LINE=""
+if [ -f "seed-data/el-peers.txt" ]; then
+    EL_PEERS=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
+    PEERS_LINE=", \"TrustedPeers\":  \"$EL_PEERS\""
+fi
+
+BOOTNODES_LINE=""
+if [ -f "seed-data/el-bootnodes.txt" ]; then
+    EL_BOOTNODES=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
+    BOOTNODES_LINE=", \"Bootnodes\":  \"$EL_BOOTNODES\""
+fi
+
+ARCHIVE_OPTION=' , "Pruning": { "Mode": "Full" } '
 if [ "$EL_ARCHIVE_NODE" = true ]; then
-    ARCHIVE_OPTION='  "Pruning": { "Mode": "None" }, '
+    ARCHIVE_OPTION=' ,  "Pruning": { "Mode": "None" } '
+fi
+
+IP_OPTION=""
+if [ -n "$MY_IPV4" ]; then
+    IP_OPTION=", \"ExternalIp\": \"$MY_IPV4\""
 fi
 
 cat <<EOF > $NETHERMIND_CONFIG_DIR/nethermind.cfg
@@ -46,10 +51,10 @@ cat <<EOF > $NETHERMIND_CONFIG_DIR/nethermind.cfg
   },
   "JsonRpc": {
     "Enabled": true,
-    "Port": 8545,
+    "Port": $EL_ETHRPC_PORT,
     "Host": "0.0.0.0",
     "EnabledModules": "net,eth,subscribe,engine,web3,client",
-    "EnginePort": 8551,
+    "EnginePort": $EL_AUTHRPC_PORT,
     "EngineHost": "127.0.0.1",
     "EngineEnabledModules": "net,eth,subscribe,engine,web3,client",
     "JwtSecretFile": "$JWT_PATH"
@@ -58,17 +63,21 @@ cat <<EOF > $NETHERMIND_CONFIG_DIR/nethermind.cfg
     "SnapSync": true
   },
   "Network": {
+    "P2PPort": $CL_ETH_PORT,
+    "DiscoveryPort": $CL_ETH_PORT,
+    "EnableUPnP": true
+    $IP_OPTION
     $BOOTNODES_LINE
     $PEERS_LINE
   },
   "EthStats": {
     "Enabled": false
   },
-  $ARCHIVE_OPTION
   "Metrics": {
     "Enabled": false,
     "NodeName": "Berachain Mainnet"
   }
+  $ARCHIVE_OPTION
 }
 EOF
 

@@ -21,24 +21,32 @@ if [ "$EL_ARCHIVE_NODE" = true ]; then
     ARCHIVE_OPTION="--gcmode archive"
 fi
 
-
 export ARCHIVE_OPTION="--full"
 if [ "$EL_ARCHIVE_NODE" = true ]; then
     ARCHIVE_OPTION=""
 fi
 
-$RETH_BIN node $ARCHIVE_OPTION			\
+IP_OPTION=""
+if [ -n "$MY_IPV4" ]; then
+    IP_OPTION="--nat extip:$MY_IPV4"
+fi
+
+$RETH_BIN node 					\
+	--datadir $RETH_DATA			\
+	--chain $RETH_GENESIS_PATH		\
+	$ARCHIVE_OPTION				\
+        $BOOTNODES_OPTION			\
+	$PEERS_OPTION				\
+	$IP_OPTION				\
 	--authrpc.addr 127.0.0.1		\
 	--authrpc.port $EL_AUTHRPC_PORT		\
 	--authrpc.jwtsecret $JWT_PATH		\
-	--chain $RETH_GENESIS_PATH		\
-	--datadir $RETH_DATA			\
-	--port 30303				\
+	--port $CL_ETH_PORT			\
 	--http					\
 	--http.addr 0.0.0.0			\
-	--http.port 8545			\
+	--http.port $CL_ETHRPC_PORT		\
+        --discovery.port $CL_ETHRPC_PORT	\
 	--http.corsdomain '*'			\
-	--trusted-peers $EL_PEERS		\
 	--log.file.directory $LOG_DIR		\
 	--engine.persistence-threshold 0	\
 	--engine.memory-block-buffer-target 0 
