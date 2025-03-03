@@ -19,6 +19,9 @@ $RETH_BIN node 					\
 	--authrpc.port $EL_AUTHRPC_PORT		\
 	--authrpc.jwtsecret $JWT_PATH		\
 	--port $EL_ETH_PORT			\
+	--metrics				\
+	--metrics.addr 0.0.0.0			\
+	--metrics.port $PROMETHEUS_PORT		\
 	--http					\
 	--http.addr 0.0.0.0			\
 	--http.port $EL_ETHRPC_PORT		\

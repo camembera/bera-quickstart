@@ -21,7 +21,7 @@ cp seed-data/eth-nether-genesis.json $NETHERMIND_GENESIS_PATH
 PEERS_LINE=""
 if [ -f "seed-data/el-peers.txt" ]; then
     EL_PEERS=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
-    PEERS_LINE=", \"TrustedPeers\":  \"$EL_PEERS\""
+    PEERS_LINE=", \"StaticPeers\":  \"$EL_PEERS\""
 fi
 
 BOOTNODES_LINE=""
@@ -74,7 +74,8 @@ cat <<EOF > $NETHERMIND_CONFIG_DIR/nethermind.cfg
     "Enabled": false
   },
   "Metrics": {
-    "Enabled": false,
+    "Enabled": true,
+    "ExposePort": $PROMETHEUS_PORT,
     "NodeName": "Berachain Mainnet"
   }
   $ARCHIVE_OPTION
