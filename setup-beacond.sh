@@ -46,7 +46,7 @@ cp seed-data/config.toml $BEACOND_CONFIG/config.toml
 sed $SED_OPT 's|^rpc-dial-url = ".*"|rpc-dial-url = "'http://localhost:$EL_AUTHRPC_PORT'"|' $BEACOND_CONFIG/app.toml
 sed $SED_OPT 's|^laddr = ".*26657"|laddr = "tcp://127.0.0.1:'$CL_ETHRPC_PORT'"|' $BEACOND_CONFIG/config.toml
 sed $SED_OPT 's|^laddr = ".*26656"|laddr = "tcp://127.0.0.1:'$CL_ETHP2P_PORT'"|' $BEACOND_CONFIG/config.toml
-sed $SED_OPT 's|^external_address = ".*"|external_address = "'$MY_IP'"|' $BEACOND_CONFIG/config.toml
+sed $SED_OPT 's|^external_address = ".*"|external_address = "'$MY_IP:$CL_ETHP2P_PORT'"|' $BEACOND_CONFIG/config.toml
 sed $SED_OPT 's|^proxy_app = ".*26658"|proxy_app = "tcp://127.0.0.1:'$CL_ETHPROXY_PORT'"|' $BEACOND_CONFIG/config.toml
 
 sed $SED_OPT 's|^jwt-secret-path = ".*"|jwt-secret-path = "'$JWT_PATH'"|' $BEACOND_CONFIG/app.toml
