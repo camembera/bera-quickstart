@@ -12,16 +12,15 @@ export BEACOND_BIN=$(command -v beacond || echo $(pwd)/beacond)
 export BEACOND_DATA=$(pwd)/var/beacond
 export BEACOND_CONFIG=$BEACOND_DATA/config  # don't change this. sorry.
 
-export CL_ETHRPC_PORT=31000
+export CL_ETHRPC_PORT=26657    # or 31000
 export CL_ETHP2P_PORT=31001
 export CL_ETHPROXY_PORT=31002
 
-export EL_ETHRPC_PORT=31003
+export EL_ETHRPC_PORT=8545     # or 31003
 export EL_AUTHRPC_PORT=31004
-export EL_ETH_PORT=31005
+export EL_ETH_PORT=30303       # or 31005
 export PROMETHEUS_PORT=31006
 
-export RPC_DIAL_URL=http://localhost:$EL_AUTHRPC_PORT
 export JWT_PATH=$BEACOND_CONFIG/jwt.hex
 export LOG_DIR=$(pwd)/logs
 
