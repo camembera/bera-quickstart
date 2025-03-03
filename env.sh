@@ -6,20 +6,21 @@ export MONIKER_NAME=camembera
 export WALLET_ADDRESS_FEE_RECIPIENT=0x9BcaA41DC32627776b1A4D714Eef627E640b3EF5
 export EL_ARCHIVE_NODE=false # set to true if you want to run an archive node on CL and EL
 export MY_IP=`curl canhazip.com`
+export PORT_BASE=
 
 # THESE DEPEND ON YOUR LOCAL SETUP
 export BEACOND_BIN=$(command -v beacond || echo $(pwd)/beacond)
 export BEACOND_DATA=$(pwd)/var/beacond
 export BEACOND_CONFIG=$BEACOND_DATA/config  # don't change this. sorry.
 
-export CL_ETHRPC_PORT=26657    # or 31000
-export CL_ETHP2P_PORT=31001
-export CL_ETHPROXY_PORT=31002
+export CL_ETHRPC_PORT=${PORT_BASE:+$PORT_BASE}${PORT_BASE:-26657}    # default 26657
+export CL_ETHP2P_PORT=${PORT_BASE:+$(($PORT_BASE+1))}${PORT_BASE:-26656}
+export CL_ETHPROXY_PORT=${PORT_BASE:+$(($PORT_BASE+2))}${PORT_BASE:-26658}
 
-export EL_ETHRPC_PORT=8545     # or 31003
-export EL_AUTHRPC_PORT=31004
-export EL_ETH_PORT=30303       # or 31005
-export PROMETHEUS_PORT=31006
+export EL_ETHRPC_PORT=${PORT_BASE:+$(($PORT_BASE+3))}${PORT_BASE:-8545}
+export EL_AUTHRPC_PORT=${PORT_BASE:+$(($PORT_BASE+4))}${PORT_BASE:-8551}
+export EL_ETH_PORT=${PORT_BASE:+$(($PORT_BASE+5))}${PORT_BASE:-30303}
+export PROMETHEUS_PORT=${PORT_BASE:+$(($PORT_BASE+6))}${PORT_BASE:-9101}
 
 export JWT_PATH=$BEACOND_CONFIG/jwt.hex
 export LOG_DIR=$(pwd)/logs
