@@ -36,8 +36,8 @@ if [ "$EL_ARCHIVE_NODE" = true ]; then
 fi
 
 IP_OPTION=""
-if [ -n "$MY_IPV4" ]; then
-    IP_OPTION=", \"ExternalIp\": \"$MY_IPV4\""
+if [ -n "$MY_IP" ]; then
+    IP_OPTION=", \"ExternalIp\": \"$MY_IP\""
 fi
 
 cat <<EOF > $NETHERMIND_CONFIG_DIR/nethermind.cfg
@@ -63,8 +63,8 @@ cat <<EOF > $NETHERMIND_CONFIG_DIR/nethermind.cfg
     "SnapSync": true
   },
   "Network": {
-    "P2PPort": $CL_ETH_PORT,
-    "DiscoveryPort": $CL_ETH_PORT,
+    "P2PPort": $EL_ETH_PORT,
+    "DiscoveryPort": $EL_ETH_PORT,
     "EnableUPnP": true
     $IP_OPTION
     $BOOTNODES_LINE

@@ -5,21 +5,22 @@ export CHAIN_SPEC="mainnet"
 export MONIKER_NAME=camembera
 export WALLET_ADDRESS_FEE_RECIPIENT=0x9BcaA41DC32627776b1A4D714Eef627E640b3EF5
 export EL_ARCHIVE_NODE=false # set to true if you want to run an archive node on CL and EL
-export MY_IPV4=`curl canhazip.com`
+export MY_IP=`curl canhazip.com`
 
 # THESE DEPEND ON YOUR LOCAL SETUP
 export BEACOND_BIN=$(command -v beacond || echo $(pwd)/beacond)
 export BEACOND_DATA=$(pwd)/var/beacond
 export BEACOND_CONFIG=$BEACOND_DATA/config  # don't change this. sorry.
 
-export EL_AUTHRPC_PORT=31000
-export EL_ETHRPC_PORT=31001
-export EL_ETHP2P_PORT=31002
-export EL_ETHPROXY_PORT=31003
+export CL_ETHRPC_PORT=31000
+export CL_ETHP2P_PORT=31001
+export CL_ETHPROXY_PORT=31002
 
-export CL_ETHRPC_PORT=31004
-export CL_ETH_PORT=31005
+export EL_ETHRPC_PORT=31003
+export EL_AUTHRPC_PORT=31004
+export EL_ETH_PORT=31005
 export PROMETHEUS_PORT=31006
+
 export RPC_DIAL_URL=http://localhost:$EL_AUTHRPC_PORT
 export JWT_PATH=$BEACOND_CONFIG/jwt.hex
 export LOG_DIR=$(pwd)/logs
@@ -54,10 +55,24 @@ if command -v Nethermind.Runner >/dev/null 2>&1; then
     export NETHERMIND_GENESIS_PATH="${NETHERMIND_CONFIG_DIR}/eth-nether-genesis.json"
 fi  
 
-if [ ! "$RETH_BIN" ] && [ ! "$GETH_BIN" ] && [ ! "$NETHERMIND_BIN" ]; then
+if command -v erigon >/dev/null 2>&1; then
+    export ERIGON_BIN=$(command -v erigon)
+    export ERIGON_DATA=$(pwd)/var/erigon
+    export ERIGON_GENESIS_PATH=$ERIGON_DATA/genesis.json
+fi  
+
+if [ ! "$RETH_BIN" ] && [ ! "$GETH_BIN" ] && [ ! "$NETHERMIND_BIN" ] && [ ! "$ERIGON_BIN" ]; then
     echo "Error: No execution client found in PATH"
     echo "Please install either reth, geth, or Nethermind and ensure it is available in your PATH"
     exit 1
+fi
+
+if [ -f "seed-data/el-bootnodes.txt" ]; then
+    EL_BOOTNODES=$(grep '^enode://' "seed-data/el-bootnodes.txt"| tr '\n' ',' | sed 's/,$//')
+fi
+
+if [ -f "seed-data/el-peers.txt" ]; then
+    EL_PEERS=$(grep '^enode://' "seed-data/el-peers.txt"| tr '\n' ',' | sed 's/,$//')
 fi
 
 # sed options for config file rewriting
